@@ -38,6 +38,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -263,5 +264,11 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
     if (billing != null) {
       billing.destroyBillingInstance();
     }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.about_menu, menu);
+    return true;
   }
 }
