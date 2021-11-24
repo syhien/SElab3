@@ -37,16 +37,24 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.palette.graphics.Palette;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /** Created by vishal on 27/7/16. */
 public class AboutActivity extends BasicActivity implements View.OnClickListener {
@@ -165,6 +173,11 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
       case android.R.id.home:
         onBackPressed();
         break;
+      case R.id.action_screen_shot:
+        if (takeScreenShot()) {
+          Toast.makeText(this, "截屏已保存", Toast.LENGTH_SHORT).show();
+        }
+        break;
     }
     return super.onOptionsItemSelected(item);
   }
@@ -269,6 +282,31 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.about_menu, menu);
+    return true;
+  }
+
+  private boolean takeScreenShot() {
+    View view = getWindow().getDecorView();
+    view.setDrawingCacheEnabled(true);
+    view.buildDrawingCache();
+    Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+    if (bitmap != null) {
+      try {
+        String savePath = Environment.getExternalStorageDirectory().getPath();
+        String filePath = savePath + File.separator + "screenshot.png";
+        File file = new File(filePath);
+        FileOutputStream fileStream = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileStream);
+        fileStream.flush();
+        fileStream.close();
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+        return false;
+      } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+      }
+    }
     return true;
   }
 }
