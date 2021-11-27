@@ -33,8 +33,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -169,13 +171,26 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    String filePath;
     switch (item.getItemId()) {
       case android.R.id.home:
         onBackPressed();
         break;
       case R.id.action_screen_shot:
-        if (takeScreenShot()) {
+        filePath = takeScreenShot();
+        if (filePath.length() > 0) {
           Toast.makeText(this, "截屏已保存", Toast.LENGTH_SHORT).show();
+        }
+        break;
+      case R.id.action_screen_shot_email:
+        filePath = takeScreenShot();
+        if (filePath.length() > 0) {
+          Toast.makeText(this, "截屏已保存", Toast.LENGTH_SHORT).show();
+          Intent emailIntent = new Intent(Intent.ACTION_SEND);
+          emailIntent.setType("message/rfc822");
+          emailIntent.putExtra(Intent.EXTRA_SUBJECT, "截图发送");
+          emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filePath));
+          startActivity(Intent.createChooser(emailIntent, "选择应用"));
         }
         break;
     }
@@ -285,7 +300,7 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
     return true;
   }
 
-  private boolean takeScreenShot() {
+  private String takeScreenShot() {
     View view = getWindow().getDecorView();
     view.setDrawingCacheEnabled(true);
     view.buildDrawingCache();
@@ -299,14 +314,15 @@ public class AboutActivity extends BasicActivity implements View.OnClickListener
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileStream);
         fileStream.flush();
         fileStream.close();
+        return filePath;
       } catch (FileNotFoundException e) {
         e.printStackTrace();
-        return false;
+        return "";
       } catch (IOException e) {
         e.printStackTrace();
-        return false;
+        return "";
       }
     }
-    return true;
+    return "";
   }
 }

@@ -6,4 +6,9 @@
         android:id="@+id/action_screen_shot"
         android:title="截图"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_screen_shot_email"
+        android:title="截图并发送"
+        app:showAsAction="never"
+        />
 </menu>
