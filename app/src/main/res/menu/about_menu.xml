@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_screen_shot"
         android:title="截图"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
     <item
         android:id="@+id/action_screen_shot_email"
         android:title="截图并发送"
         app:showAsAction="never"
-        />
+        tools:ignore="HardcodedText" />
 </menu>
